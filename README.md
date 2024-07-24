@@ -22,7 +22,6 @@ Leveraging semantic information from massive 2D images and geometric information
 
 
 ## Keyframe Control on RLBench
-<!-- ## Getting Started -->
 
 ### Install
 - Tested (Recommended) Versions: Python 3.8. We used CUDA 11.1. 
@@ -83,6 +82,8 @@ pip install -e libs/YARR
 pip install git+https://github.com/openai/CLIP.git
 pip install -r requirements.txt
 ```
+
+For running RLBench/CoppeliaSim in **headless mode**, please refer to [here](https://forum.coppeliarobotics.com/viewtopic.php?t=9294).
  
 - **Step 6:** Install the C++ extensions, the PointNet++ library. These are used to speed up the farthest point sampling (FPS).
 ```
@@ -91,7 +92,6 @@ pip install .
 cd ../../../
 ```
 
-<!-- ## Using the library -->
 
 ### Data Generation
 We utilize the tools in `libs/RLBench/tools/dataset_generator.py` to generate data. There are two differences between the data used in our paper and that used in PerAct's paper: (1) We employ OpenGL3 for rendering, which supports additional features such as shadows, unlike the data in PerAct's paper which uses OpenGL. (2) In SGRv2, since each task utilizes only 5 demonstrations, we use the first variation for tasks with multiple variations, in contrast to PerAct, which combines all variations.
@@ -147,9 +147,9 @@ If you find our work useful, please consider citing:
 ```
 ```
 @article{zhang2023universal,
-      title={A Universal Semantic-Geometric Representation for Robotic Manipulation},
-      author={Zhang, Tong and Hu, Yingdong and Cui, Hanchen and Zhao, Hang and Gao, Yang},
-      journal={arXiv preprint arXiv:2306.10474},
-      year={2023}
-    }
+    title={A Universal Semantic-Geometric Representation for Robotic Manipulation},
+    author={Zhang, Tong and Hu, Yingdong and Cui, Hanchen and Zhao, Hang and Gao, Yang},
+    journal={arXiv preprint arXiv:2306.10474},
+    year={2023}
+  }
 ```
