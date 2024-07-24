@@ -1,0 +1,76 @@
+# @package _group_
+
+name: 'SGR'
+
+# Voxelization
+voxel_sizes: [100]
+
+# Training
+lr: 0.003
+lr_scheduler: True
+num_warmup_steps: 200
+optimizer: 'adamw'
+scheduler_type: cosine
+lambda_weight_l2: 0.000001
+trans_loss_weight: 300.0
+rot_loss_weight: 1.0
+grip_loss_weight: 1.0
+collision_loss_weight: 1.0
+trans_cls: False
+rot_cls: True
+rotation_resolution: 5
+regression_loss: 'l1' # or 'l2'
+
+# Augmentation
+resample: True
+transform_augmentation:
+  apply_se3: True
+  aug_xyz: [0.125, 0.125, 0.125]
+  aug_rpy: [0.0, 0.0, 45.0]
+  aug_rot_resolution: ${method.rotation_resolution}
+bound_pcd_before_transform: False
+demo_augmentation: True
+demo_augmentation_every_n: 10
+keypoint_method: 'heuristic'
+color_drop: 0.4
+feat_drop: 0.0 # only be used when len(use_semantic) > 0
+
+# Network
+num_points: 4096 
+rand_sample: False # False: 'fps'; True: 'random'
+use_semantic: [5]
+pretrained_model: clip
+include_rgb: True
+network_input_image_size: 256
+hierarchical: True
+semantic_downsample_norm : None
+semantic_downsample_act: relu
+preprocess: True
+preprocess_norm: None
+preprocess_activation: None
+proprio_emb_dim: 32
+rgb_emb_dim: 64
+semantic_dim_per_layer: 64 # only be used when hierarchical=False
+late_proprio_concat: False
+clip_align: False
+align_type: 'both' # 'mult' 'sum' 'both' 'both2' 'all'
+point_pretrain:
+  apply: False
+  frozen: True # ture: 'frozen'; false: 'finetune'
+  lang: True
+  lang_dim: 1024
+  conf_path: 'conf/model/pointnext-s_cls_ulip.yaml'
+
+# SGRv2 related, these will only be used when 'decoder_args' in cfg_model, e.g., model=pointnext-xl_seg
+trans_point_wise: True
+point_relative_pos: True
+trans_point_uniform_weight: False
+trans_point_loss: True # only be used when trans_point_wise=true
+temperature: [0.1,0.3]
+rot_grip_collision_point_wise: True
+shared_weight: False
+rot_point_loss: True # only be used when rot_grip_collision_point_wise=True
+rot_grip_collision_shared_weight: False
+
+# Experiment tag
+tag: test

@@ -1,0 +1,53 @@
+ddp:
+    master_addr: "localhost"
+    num_devices: 1
+
+rlbench:
+    tasks: turn_tap 
+    task_name: ${rlbench.tasks} 
+    demos: 5 # number of demos to use for training
+    demo_path: data/train 
+    variation_number: 0 # -1: all varition
+    episode_length: 25
+    cameras: [front,left_shoulder,right_shoulder,wrist]
+    camera_resolution: [128, 128]
+    scene_bounds: [-0.3, -0.5, 0.6, 0.7, 0.5, 1.6]
+    include_lang_goal_in_obs: True 
+
+replay:
+    batch_size: 16
+    timesteps: 1 # number of frames to use in state stack.
+    use_disk: True
+    path: replay
+    max_parallel_processes: 128 # number of parallel processes to use for replay buffer loading
+
+framework:
+    start_seed: 0
+    logdir: logs # path to save logs
+    log_freq: 100
+    save_freq: 800
+    tensorboard_logging: True
+    csv_logging: True
+    training_iterations: 20000
+    logging_level: 20 # https://docs.python.org/3/library/logging.html#levels
+    load_existing_weights: True 
+    num_weights_to_keep: 25 # older checkpoints will be deleted chronologically
+    num_workers: 0 # how many subprocesses to use for data loading. ``0`` means that the data will be loaded in the main process.
+
+real_robot: 
+    apply: False
+    crop:
+        apply: False
+        # crop config
+        top: 0
+        left: 330
+        height: 720
+        width: 720
+
+defaults:
+    - method: SGR # or 'PERACT_BC' or 'SEMANTIC_BC_LANG'
+    - model: pointnext-xl_seg # or pointnext-s_cls
+
+hydra:
+    run:
+        dir: ${framework.logdir}/${rlbench.task_name}/${method.name}_${model.name}/${method.tag}/seed${framework.start_seed}

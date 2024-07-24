@@ -1,0 +1,43 @@
+# @package _group_
+
+name: 'SEMANTIC_BC_LANG'
+
+# Voxelization
+voxel_sizes: [100]
+
+# Training
+lr: 0.001 #0.0003 
+optimizer: 'adamw'
+lambda_weight_l2: 0.000001
+trans_loss_weight: 300.0
+rot_loss_weight: 1.0
+grip_loss_weight: 1.0
+collision_loss_weight: 1.0
+trans_cls: False 
+rotation_resolution: 5
+regression_loss: 'l1'
+grad_clip: 1000 #0.1
+
+# Augmentation
+transform_augmentation:
+  apply_se3: True
+  aug_xyz: [0.125, 0.125, 0.125]
+  aug_rpy: [0.0, 0.0, 45.0]
+  aug_rot_resolution: ${method.rotation_resolution}
+demo_augmentation: True
+demo_augmentation_every_n: 10
+keypoint_method: 'heuristic'
+
+# Network
+use_semantic: [5] 
+pretrained_model: r3m # clip
+include_rgb: True
+network_input_image_size: 256
+rgb_emb_dim: 3
+semantic_dim_per_layer: 64
+no_language: False
+clip_align: False
+align_type: 'both' # 'mult' 'sum' 'both' 'both2' 'all'
+
+# Experiment tag
+tag: demos_${rlbench.demos}-pretrain_${method.pretrained_model}

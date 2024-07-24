@@ -1,0 +1,9 @@
+[submodule "openpoints"]
+	path = openpoints
+	url = git@github.com:TongZhangTHU/openpoints.git
+[submodule "libs/YARR"]
+	path = libs/YARR
+	url = git@github.com:TongZhangTHU/YARR.git
+[submodule "libs/RLBench"]
+	path = libs/RLBench
+	url = git@github.com:TongZhangTHU/RLBench.git

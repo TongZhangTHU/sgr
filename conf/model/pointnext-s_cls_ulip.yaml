@@ -1,0 +1,36 @@
+# @package _global_
+# Adapted from: https://github.com/guochengqian/PointNeXt/blob/master/cfgs/modelnet40ply2048/pointnext-s.yaml
+model:
+  name: pointnext-s_cls_ulip
+  NAME: BaseCls
+  encoder_args:
+    NAME: PointNextEncoder
+    blocks: [1, 1, 1, 1, 1, 1]
+    strides: [1, 2, 2, 2, 2, 1]
+    width: 32
+    in_channels: 4
+    sa_layers: 2
+    sa_use_res: True
+    radius: 0.15
+    radius_scaling: 1.5
+    nsample: 32
+    expansion: 4
+    aggr_args:
+      feature_type: 'dp_fj'
+      reduction: 'max'
+    group_args:
+      NAME: 'ballquery'
+      normalize_dp: True
+    conv_args:
+      order: conv-norm-act
+    act_args:
+      act: 'relu'
+    norm_args:
+      norm: 'bn'
+  cls_args:
+    NAME: ClsHead
+    # num_classes: 223 # determined on agents/sgr/launch_utils.py
+    mlps: [512, 256]
+    # norm_args:
+    #   norm: 'bn1d'
+    dropout: 0

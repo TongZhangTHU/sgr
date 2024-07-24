@@ -1,0 +1,48 @@
+# @package _global_
+# Adapted from: https://github.com/guochengqian/PointNeXt/blob/master/cfgs/s3dis/pointnext-xl.yaml
+model:
+  name: pointnext-xl_seg
+  NAME: BaseSeg
+  encoder_args:
+    NAME: PointNextLangHierachicalEncoder
+    blocks: [1, 4, 7, 4, 4] 
+    strides: [1, 4, 4, 4, 4]
+    sa_layers: 1
+    sa_use_res: False 
+    width: 64 
+    #in_channels: 4 # determined on agents/sgr/launch_utils.py
+    expansion: 4
+    radius: 0.1
+    nsample: 32 
+    aggr_args:
+      feature_type: 'dp_fj'
+      reduction: 'max'
+    group_args:
+      NAME: 'ballquery'
+      normalize_dp: True
+    conv_args:
+      order: conv-norm-act
+    act_args:
+      act: 'relu'
+    norm_args:
+      norm: 'bn'
+    # Language
+    lang_index: [] # [1, 2, 3, 4]
+    lang_feat_dim: 1024
+    lang_fusion_type: 'mult'
+    # Hierachical
+    #resnet_layer_index: [] # determined on agents/sgr/launch_utils.py
+    resnet_fusion_type: 'concat'
+    resnet_pos: 3
+    feature_dropout: 0 
+  decoder_args:
+    NAME: PointNextDecoder
+  cls_args:
+    NAME: SegHeadWithNormAct
+    num_classes: 64
+    in_channels: null
+    mlps: [64]
+    norm_args:
+      norm: 'bn'
+    dropout: 0
+    concat_encoder_feat: None

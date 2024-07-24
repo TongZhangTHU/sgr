@@ -1,0 +1,42 @@
+rlbench:  
+    tasks: turn_tap # tasks used for evaluation
+    weight_tasks: ${rlbench.tasks} # tasks on which the model is trained, used to determine the checkpoint weights path (logdir)
+    demo_path: data/test
+    variation_number: 0
+    episode_length: 25
+    cameras: [front,left_shoulder,right_shoulder,wrist]
+    camera_resolution: [128, 128]
+    time_in_state: True
+    headless: True
+    
+framework:
+    start_seed: 0
+    logdir: logs
+    eval_envs: 1 # number of parallel environments to evaluate, adjust based on GPU memory
+    eval_type: 'last' # 'missing', 'best'
+    csv_name: 'default'
+    tensorboard_logging: True
+    csv_logging: True
+    gpu: 0
+    record_every_n: 5
+    eval_from_eps_number: 0
+    eval_episodes: 25 # number of episodes to evaluate
+    eval_save_metrics: True
+
+cinematic_recorder:
+    enabled: False
+    camera_resolution: [1280, 720]
+    fps: 30
+    rotate_speed: 0.005
+    init_rotation_degree: 180 # 45
+
+method:
+    name: 'SGR'
+    tag: test
+
+model:
+    name: pointnext-xl_seg
+
+hydra:
+    run:
+        dir: ${framework.logdir}/${rlbench.weight_tasks}/${method.name}_${model.name}/${method.tag}/seed${framework.start_seed}
