@@ -13,7 +13,7 @@ This is the official repository for [SGRv2](https://sgrv2-robot.github.io/) and 
 
 ### SGR
 [**A Universal Semantic-Geometric Representation for Robotic Manipulation**](https://semantic-geometric-representation.github.io/)  
-[Tong Zhang](https://tongzhangthu.github.io/), [Yingdong Hu](https://yingdong-hu.github.io/), Hanchen Cui, [Hang Zhao](https://hangzhaomit.github.io/), [Yang Gao](https://yang-gao.weebly.com/)<br/>
+[Tong Zhang](https://tongzhangthu.github.io/)\*, [Yingdong Hu](https://yingdong-hu.github.io/)\*, Hanchen Cui, [Hang Zhao](https://hangzhaomit.github.io/), [Yang Gao](https://yang-gao.weebly.com/)<br/>
 [***CoRL, 2023***](https://www.robot-learning.org/) 
 
 ![](media/sgrv1.png)
@@ -96,7 +96,7 @@ cd ../../../
 ### Data Generation
 We utilize the tools in `libs/RLBench/tools/dataset_generator.py` to generate data. There are two differences between the data used in our paper and that used in PerAct's paper: (1) We employ OpenGL3 for rendering, which supports additional features such as shadows, unlike the data in PerAct's paper which uses OpenGL. (2) In SGRv2, since each task utilizes only 5 demonstrations, we use the first variation for tasks with multiple variations, in contrast to PerAct, which combines all variations.
 
-Below is an example of how to generate data. For more details, see `scripts/gen_data.sh`. These commands can be executed in parallel for multiple tasks.
+Below is an example of how to generate data. For more details, see [`scripts/gen_data.sh`](scripts/gen_data.sh). These commands can be executed in parallel for multiple tasks.
 ```
 python libs/RLBench/tools/dataset_generator.py \
                           --save_path=data/train \
@@ -116,7 +116,65 @@ The following is a guide for training everything from scratch. All tasks follow 
 3. Run evaluation using `eval.py` with `framework.eval_type=missing5` and `framework.eval_episodes=50` to assess the last 5 checkpoints across 50 episodes on `test` data, and save the results in `eval_data.csv`.
 4. Repeat steps 2 and 3 with 3 seeds and report the average results.
 
-The scripts for training and evaluating SGRv2 and SGR can be found in `scripts/run_sgrv2.sh` and `scripts/run_sgrv1.sh`, respectively. It is recommended to run multiple seeds to reduce variance.
+Below is an example of how to train and evaluate SGRv2 and SGR. For more details, see [`scripts/run_sgrv2.sh`](scripts/run_sgrv2.sh) and [`scripts/run_sgrv1.sh`](scripts/run_sgrv1.sh). It is recommended to run multiple seeds to reduce variance.
+
+Train SGRv2 on `open_microwave` with `5` demos for `20000` iterations:
+```
+CUDA_VISIBLE_DEVICES=0 python train.py  rlbench.tasks=open_microwave \
+                                        rlbench.demos=5 \
+                                        rlbench.demo_path=data/train \
+                                        replay.batch_size=16 \
+                                        framework.start_seed=0 \
+                                        framework.save_freq=800 \
+                                        framework.training_iterations=20000 \
+                                        method=SGR \
+                                        method.color_drop=0.4 \
+                                        method.tag=sgrv2-demos_5-iter_20000 \
+                                        model=pointnext-xl_seg \
+                                        model.cls_args.mlps=[256] \
+                                        model.cls_args.num_classes=256
+```
+
+Train SGRv1 on `open_microwave` with `5` demos for `20000` iterations:
+```
+CUDA_VISIBLE_DEVICES=0 python train.py  rlbench.tasks=open_microwave \
+                                        rlbench.demos=5 \
+                                        rlbench.demo_path=data/train \
+                                        replay.batch_size=32 \
+                                        framework.start_seed=0 \
+                                        framework.save_freq=800 \
+                                        framework.training_iterations=20000 \
+                                        method=SGR \
+                                        method.color_drop=0.2 \
+                                        method.tag=sgrv1-demos_5-iter_20000 \
+                                        model=pointnext-s_cls
+```
+
+Evalute last 5 checkpoints of SGRv2 on `open_microwave` for `50` episodes:
+```
+CUDA_VISIBLE_DEVICES=0 python eval.py rlbench.tasks=open_microwave \
+                                      rlbench.demo_path=data/test \
+                                      framework.start_seed=0 \
+                                      framework.eval_type=missing5 \
+                                      framework.eval_envs=5 \
+                                      framework.eval_episodes=50 \
+                                      method.name=SGR \
+                                      method.tag=sgrv2-demos_5-iter_20000 \
+                                      model.name=pointnext-xl_seg
+```
+
+Evalute last 5 checkpoints of SGRv1 on `open_microwave` for `50` episodes:
+```
+CUDA_VISIBLE_DEVICES=0 python eval.py rlbench.tasks=open_microwave \
+                                      rlbench.demo_path=data/test \
+                                      framework.start_seed=0 \
+                                      framework.eval_type=missing5 \
+                                      framework.eval_envs=5 \
+                                      framework.eval_episodes=50 \
+                                      method.name=SGR \
+                                      method.tag=sgrv1-demos_5-iter_20000 \
+                                      model.name=pointnext-s_cls
+```
 
 
 
@@ -130,7 +188,7 @@ The scripts for training and evaluating SGRv2 and SGR can be found in `scripts/r
 We sincerely thank the authors of the following repositories for sharing their code.
 - [PerAct](https://github.com/peract/peract)
 - [PyRep](https://github.com/stepjam/PyRep)
-- [RLBench](https://github.com/stepjam/RLBench/tree/master)
+- [RLBench](https://github.com/stepjam/RLBench)
 - [YARR](https://github.com/stepjam/YARR)
 - [RVT](https://github.com/NVlabs/RVT)
 
