@@ -913,24 +913,37 @@ class SGRAgent(Agent):
         return []
 
     def load_weights(self, savedir: str):
-        device = self._device if not self._training else torch.device(
-            'cuda:%d' % self._device)
+        device = self._device if not self._training else torch.device('cuda:%d' % self._device)
         weight_file = os.path.join(savedir, '%s.pt' % self._name)
-        state_dict = torch.load(weight_file, map_location=device)
-
-        # load only keys that are in the current model
+        checkpoint = torch.load(weight_file, map_location=device)
+        
+        # Load model state dict
         merged_state_dict = self._net.state_dict()
+        state_dict = checkpoint['model_state']
         for k, v in state_dict.items():
             if not self._training:
                 k = k.replace('_sgr_net.module', '_sgr_net')
             if k in merged_state_dict:
                 merged_state_dict[k] = v
             else:
-                if '_voxelizer' not in k:
-                    logging.warning("key %s not found in checkpoint" % k)
+                logging.warning("key %s not found in checkpoint" % k)
         self._net.load_state_dict(merged_state_dict)
-        logging.info("loaded weights from %s" % weight_file)
+        
+        if self._training:
+            # Load optimizer state if provided
+            self._optimizer.load_state_dict(checkpoint['optimizer_state'])
+            
+            # Load learning rate scheduler state if provided
+            if self._lr_scheduler:
+                self._scheduler.load_state_dict(checkpoint['lr_sched_state'])
+        
+        logging.info(f"Loaded weights from {weight_file}")
+
 
     def save_weights(self, savedir: str):
-        torch.save(self._net.state_dict(),
-                   os.path.join(savedir, '%s.pt' % self._name))
+        save_dict = {
+            'model_state': self._net.state_dict(),
+            'optimizer_state': self._optimizer.state_dict(),
+            'lr_sched_state': self._scheduler.state_dict() if self._lr_scheduler else None,
+        }
+        torch.save(save_dict, os.path.join(savedir, '%s.pt' % self._name))
