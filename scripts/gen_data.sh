@@ -2,9 +2,7 @@ save_path=data/train # or data/test
 tasks=open_microwave
 episodes_per_task=100
 
-# OpenGL3 supports more rendering features, such as shadows, 
-# unlike data used in PerAct's paper, which utilizes OpenGL.
-renderer=opengl3 
+renderer=opengl 
 
 # In SGRv2, we only use the first variation for tasks with multiple variations, 
 # unlike Peract, which mixes all variations.

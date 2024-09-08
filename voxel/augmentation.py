@@ -11,14 +11,14 @@ def perturb_se3(pcd,
                 action_gripper_4x4,
                 bounds):
     """ Perturb point clouds with given transformation.
-    :param pcd: list of point clouds [[bs, 3, N], ...] for N cameras
+    :param pcd: list of point clouds [[bs, 3, H, W], ...] for N cameras
     :param trans_shift_4x4: translation matrix [bs, 4, 4]
     :param rot_shift_4x4: rotation matrix [bs, 4, 4]
     :param action_gripper_4x4: original keyframe action gripper pose [bs, 4, 4]
     :param bounds: metric scene bounds [bs, 6]
     :return: peturbed point clouds
     """
-    # baatch bounds if necessary
+    # batch bounds if necessary
     bs = pcd[0].shape[0]
     if bounds.shape[0] != bs:
         bounds = bounds.repeat(bs, 1)

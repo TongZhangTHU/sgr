@@ -25,13 +25,13 @@ i=0 # GPU id
 
 # Training
 CUDA_VISIBLE_DEVICES=$i python train.py \
-rlbench.tasks=$tasks rlbench.demos=$demos rlbench.demo_path=$demo_path/train replay.batch_size=$batch_size \
-framework.start_seed=$start_seed framework.logdir=$logdir framework.save_freq=$save_freq framework.training_iterations=$training_iterations \
-method=$method method.lr=$lr method.color_drop=$color_drop method.use_semantic=$use_semantic method.pretrained_model=$pretrained_model \
-method.tag=$tag model=$model
+    rlbench.tasks=$tasks rlbench.demos=$demos rlbench.demo_path=$demo_path/train replay.batch_size=$batch_size \
+    framework.start_seed=$start_seed framework.logdir=$logdir framework.save_freq=$save_freq framework.training_iterations=$training_iterations \
+    method=$method method.lr=$lr method.color_drop=$color_drop method.use_semantic=$use_semantic method.pretrained_model=$pretrained_model \
+    method.tag=$tag model=$model
 
 # Evaluation
 CUDA_VISIBLE_DEVICES=$i python eval.py \
-rlbench.tasks=$tasks rlbench.demo_path=$demo_path/test framework.start_seed=$start_seed framework.logdir=$logdir \
-framework.eval_type=$test_type framework.eval_envs=$test_envs framework.eval_episodes=$test_episodes \
-method.name=$method method.tag=$tag model.name=$model
+    rlbench.tasks=$tasks rlbench.demo_path=$demo_path/test framework.start_seed=$start_seed framework.logdir=$logdir \
+    framework.eval_type=$test_type framework.eval_envs=$test_envs framework.eval_episodes=$test_episodes \
+    method.name=$method method.tag=$tag model.name=$model

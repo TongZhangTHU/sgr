@@ -19,7 +19,7 @@ replay:
     timesteps: 1 # number of frames to use in state stack.
     use_disk: True
     path: replay
-    max_parallel_processes: 128 # number of parallel processes to use for replay buffer loading
+    max_parallel_processes: 3 # number of parallel processes to use for replay buffer loading
 
 framework:
     start_seed: 0
