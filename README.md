@@ -5,7 +5,7 @@ This is the official repository for [SGRv2](https://sgrv2-robot.github.io/) and 
 ### SGRv2
 [**Leveraging Locality to Boost Sample Efficiency in Robotic Manipulation**](https://sgrv2-robot.github.io/)  
 [Tong Zhang](https://tongzhangthu.github.io/), [Yingdong Hu](https://yingdong-hu.github.io/), Jiacheng You, [Yang Gao](https://yang-gao.weebly.com/)<br/>
-***CoRL, 2024***
+[***CoRL, 2024***](https://www.robot-learning.org/) 
 
 ![](media/sgrv2.png)
 
@@ -83,7 +83,7 @@ pip install git+https://github.com/openai/CLIP.git
 pip install -r requirements.txt
 ```
 
-For running RLBench/CoppeliaSim in **headless mode**, please refer to the [official repo](https://github.com/stepjam/RLBench?tab=readme-ov-file#running-headless) and [CoppeliaSim forums](https://forum.coppeliarobotics.com/viewtopic.php?t=9294).
+For running RLBench/CoppeliaSim in **headless mode**, please refer to the [RLBench official repo](https://github.com/stepjam/RLBench?tab=readme-ov-file#running-headless) and [CoppeliaSim forums](https://forum.coppeliarobotics.com/viewtopic.php?t=9294).
  
 - **Step 6:** Install the C++ extensions, the PointNet++ library. These are used to speed up the farthest point sampling (FPS).
 ```
